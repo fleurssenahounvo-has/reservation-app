@@ -1,0 +1,8 @@
+.ressources { max-width: 900px; margin: 0 auto; padding: 1rem; }
+.filtres { display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.carte { display: flex; justify-content: space-between; align-items: center; gap: 1rem; border: 1px solid #ccc; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.carte h2 { margin: 0 0 .25rem; font-size: 1.25rem; }
+.carte p { margin: .15rem 0; }
+.carte .etab { color: #666; }
+.bouton { background: #0F6E56; color: #fff; padding: .6rem 1rem; border-radius: 6px; text-decoration: none; white-space: nowrap; }
+.bouton:hover { background: #0b5643; }
