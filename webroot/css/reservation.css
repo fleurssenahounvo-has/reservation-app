@@ -12,3 +12,6 @@
 .alerte { background: #FBE4E1; color: #C0392B; border: 1px solid #C0392B; border-radius: 6px; padding: .75rem 1rem; margin: 1rem 0; font-weight: 700; }
 .alerte.ok { background: #E1F5EE; color: #0F6E56; border-color: #0F6E56; }
 .top-nav-title span { color: #0F6E56; }
+.top-nav-title a { color: #333; }
+.ressources form button { background: #0F6E56; border-color: #0F6E56; }
+.ressources form button:hover { background: #0b5643; border-color: #0b5643; }
