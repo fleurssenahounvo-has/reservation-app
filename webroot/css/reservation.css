@@ -9,3 +9,5 @@
 .carte h2 { font-weight: 700; letter-spacing: normal; font-size: 1.3rem; }
 .filtres button { background: #0F6E56; border-color: #0F6E56; }
 .filtres button:hover { background: #0b5643; border-color: #0b5643; }
+.alerte { background: #FBE4E1; color: #C0392B; border: 1px solid #C0392B; border-radius: 6px; padding: .75rem 1rem; margin: 1rem 0; font-weight: 700; }
+.alerte.ok { background: #E1F5EE; color: #0F6E56; border-color: #0F6E56; }
