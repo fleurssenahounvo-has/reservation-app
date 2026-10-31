@@ -75,13 +75,13 @@ class EtablissementsTable extends Table
         $validator
             ->scalar('adresse')
             ->maxLength('adresse', 255)
-            ->requirePresence('adresse', 'create')
+            ->allowEmptyString('adresse', 'create')
             ->notEmptyString('adresse');
 
         $validator
             ->scalar('telephone')
             ->maxLength('telephone', 30)
-            ->requirePresence('telephone', 'create')
+            ->allowEmptyString('telephone', 'create')
             ->notEmptyString('telephone');
 
         return $validator;

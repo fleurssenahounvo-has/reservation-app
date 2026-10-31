@@ -21,11 +21,11 @@ class BlocagesFixture extends TestFixture
             [
                 'id' => 1,
                 'ressource_id' => 1,
-                'debut' => '2026-10-31 18:26:54',
-                'fin' => '2026-10-31 18:26:54',
+                'debut' => '2026-10-31 22:30:27',
+                'fin' => '2026-10-31 22:30:27',
                 'motif' => 'Lorem ipsum dolor sit amet',
-                'created' => '2026-10-31 18:26:54',
-                'modified' => '2026-10-31 18:26:54',
+                'created' => '2026-10-31 22:30:27',
+                'modified' => '2026-10-31 22:30:27',
             ],
         ];
         parent::init();

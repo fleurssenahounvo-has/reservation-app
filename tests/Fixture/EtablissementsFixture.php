@@ -24,8 +24,8 @@ class EtablissementsFixture extends TestFixture
                 'type' => 'Lorem ipsum dolor sit amet',
                 'adresse' => 'Lorem ipsum dolor sit amet',
                 'telephone' => 'Lorem ipsum dolor sit amet',
-                'created' => '2026-10-31 18:22:53',
-                'modified' => '2026-10-31 18:22:53',
+                'created' => '2026-10-31 22:29:49',
+                'modified' => '2026-10-31 22:29:49',
             ],
         ];
         parent::init();

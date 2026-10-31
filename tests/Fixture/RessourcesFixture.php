@@ -25,8 +25,8 @@ class RessourcesFixture extends TestFixture
                 'type' => 'Lorem ipsum dolor sit amet',
                 'capacite' => 1,
                 'prix' => 1.5,
-                'created' => '2026-10-31 18:26:11',
-                'modified' => '2026-10-31 18:26:11',
+                'created' => '2026-10-31 22:30:06',
+                'modified' => '2026-10-31 22:30:06',
             ],
         ];
         parent::init();
