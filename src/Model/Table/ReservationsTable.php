@@ -64,52 +64,51 @@ class ReservationsTable extends Table
      * @return \Cake\Validation\Validator
      */
     public function validationDefault(Validator $validator): Validator
-    {
-        $validator
-            ->integer('ressource_id')
-            ->notEmptyString('ressource_id');
+{
+    $validator
+        ->integer('ressource_id')
+        ->requirePresence('ressource_id', 'create')
+        ->notEmptyString('ressource_id');
 
-        $validator
-            ->integer('utilisateur_id')
-            ->allowEmptyString('utilisateur_id');
+    $validator
+        ->integer('utilisateur_id')
+        ->allowEmptyString('utilisateur_id');
 
-        $validator
-            ->scalar('nom_client')
-            ->maxLength('nom_client', 100)
-            ->allowEmptyString('nom_client');
+    $validator
+        ->scalar('nom_client')
+        ->maxLength('nom_client', 100)
+        ->allowEmptyString('nom_client');
 
-        $validator
-            ->scalar('telephone_client')
-            ->maxLength('telephone_client', 30)
-            ->allowEmptyString('telephone_client');
+    $validator
+        ->scalar('telephone_client')
+        ->maxLength('telephone_client', 30)
+        ->allowEmptyString('telephone_client');
 
-        $validator
-            ->scalar('email_client')
-            ->maxLength('email_client', 150)
-            ->allowEmptyString('email_client');
+    $validator
+        ->email('email_client')
+        ->maxLength('email_client', 150)
+        ->allowEmptyString('email_client');
 
-        $validator
-            ->dateTime('debut')
-            ->requirePresence('debut', 'create')
-            ->notEmptyDateTime('debut');
+    $validator
+        ->dateTime('debut')
+        ->requirePresence('debut', 'create')
+        ->notEmptyDateTime('debut');
 
-        $validator
-            ->dateTime('fin')
-            ->requirePresence('fin', 'create')
-            ->notEmptyDateTime('fin');
+    $validator
+        ->dateTime('fin')
+        ->requirePresence('fin', 'create')
+        ->notEmptyDateTime('fin');
 
-        $validator
-            ->scalar('statut')
-            ->maxLength('statut', 20)
-            ->notEmptyString('statut');
+    $validator
+        ->inList('statut', ['en_attente', 'confirmee', 'annulee', 'expiree'])
+        ->notEmptyString('statut');
 
-        $validator
-            ->scalar('source')
-            ->maxLength('source', 20)
-            ->notEmptyString('source');
+    $validator
+        ->inList('source', ['en_ligne', 'telephone', 'comptoir'])
+        ->notEmptyString('source');
 
-        return $validator;
-    }
+    return $validator;
+}
 
     /**
      * Returns a rules checker object that will be used for validating
