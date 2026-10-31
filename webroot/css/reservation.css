@@ -6,3 +6,6 @@
 .carte .etab { color: #666; }
 .bouton { background: #0F6E56; color: #fff; padding: .6rem 1rem; border-radius: 6px; text-decoration: none; white-space: nowrap; }
 .bouton:hover { background: #0b5643; }
+.carte h2 { font-weight: 700; letter-spacing: normal; font-size: 1.3rem; }
+.filtres button { background: #0F6E56; border-color: #0F6E56; }
+.filtres button:hover { background: #0b5643; border-color: #0b5643; }
