@@ -101,6 +101,42 @@ class ReservationsController extends AppController
 
         return $this->redirect(['action' => 'gestion']);
     }
+        /**
+     * Réservation prise par téléphone ou au comptoir : confirmée immédiatement.
+     */
+    public function ajouter()
+    {
+        $etablissementId = $this->etablissementDuGestionnaire();
+        $ressources = $this->fetchTable('Ressources')->find('list', keyField: 'id', valueField: 'nom')
+            ->where(['etablissement_id' => $etablissementId])
+            ->orderBy(['nom' => 'ASC'])
+            ->toArray();
+        $erreur = null;
+
+        if ($this->request->is('post')) {
+            $donnees = $this->request->getData();
+            if (!isset($ressources[(int)($donnees['ressource_id'] ?? 0)])) {
+                throw new ForbiddenException('Cette ressource appartient à un autre établissement.');
+            }
+            $donnees['source'] = in_array($donnees['source'] ?? '', ['telephone', 'comptoir'], true)
+                ? $donnees['source']
+                : 'telephone';
+            unset($donnees['utilisateur_id']);
+
+            try {
+                (new ServiceReservation())->reserver($donnees, 'confirmee', false);
+                $this->Flash->success('Réservation enregistrée et confirmée.');
+
+                return $this->redirect(['action' => 'gestion']);
+            } catch (ConflitReservationException | InvalidArgumentException $e) {
+                $erreur = $e->getMessage();
+            } catch (PersistenceFailedException) {
+                $erreur = 'Vérifiez les informations saisies (adresse e-mail invalide ?).';
+            }
+        }
+
+        $this->set(compact('ressources', 'erreur'));
+    }
 
     /**
      * Numéro de l'établissement du gestionnaire connecté, sinon accès refusé.

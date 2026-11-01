@@ -21,8 +21,11 @@ class ServiceReservation
     public const HEURE_OUVERTURE = 8;
     public const HEURE_FERMETURE = 18;
 
-    public function reserver(array $donnees)
+        public function reserver(array $donnees, string $statut = 'en_attente', bool $verifierFutur = true)
     {
+        if (!in_array($statut, ['en_attente', 'confirmee'], true)) {
+            throw new InvalidArgumentException('Statut invalide.');
+        }
         $this->expirerEnAttente();
         $ressourceId = (int)($donnees['ressource_id'] ?? 0);
         $debut = new DateTime($donnees['debut'] ?? 'now');
@@ -34,7 +37,7 @@ class ServiceReservation
         if ($fin <= $debut) {
             throw new InvalidArgumentException('La fin doit être après le début.');
         }
-        if ($debut < DateTime::now()) {
+        if ($verifierFutur && $debut < DateTime::now()) {
             throw new InvalidArgumentException('Le début doit être dans le futur.');
         }
         if (empty($donnees['nom_client']) && empty($donnees['utilisateur_id'])) {

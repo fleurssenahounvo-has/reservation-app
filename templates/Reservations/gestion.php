@@ -12,7 +12,7 @@ $sources = ['en_ligne' => 'En ligne', 'telephone' => 'Téléphone', 'comptoir' =
 ?>
 <div class="ressources gestion">
     <h1>Mes réservations</h1>
-
+    <p><?= $this->Html->link('Enregistrer une réservation (téléphone, comptoir)', ['action' => 'ajouter'], ['class' => 'bouton']) ?></p>
     <p class="filtres-statut">
         <?php foreach ($filtres as $cle => $libelle) : ?>
             <?= $this->Html->link(
