@@ -17,6 +17,9 @@ class ServiceReservation
 
     /** Statuts qui occupent un créneau. */
     public const STATUTS_ACTIFS = ['en_attente', 'confirmee'];
+        /** Plage horaire affichée dans le calendrier. */
+    public const HEURE_OUVERTURE = 8;
+    public const HEURE_FERMETURE = 18;
 
     public function reserver(array $donnees)
     {
@@ -118,5 +121,110 @@ class ServiceReservation
             ['statut' => 'expiree'],
             ['statut' => 'en_attente', 'created <' => $limite],
         );
+    }
+        /**
+     * Statut de chaque jour du mois : libre, partiel, complet, ferme ou passe.
+     *
+     * @return array<int, string> Jour du mois => statut.
+     */
+    public function disponibilitesMois(int $ressourceId, int $annee, int $mois): array
+    {
+        $premier = new DateTime(sprintf('%04d-%02d-01 00:00:00', $annee, $mois));
+        $suivant = $premier->addMonths(1);
+
+        $reservations = $this->fetchTable('Reservations')->find()
+            ->where([
+                'ressource_id' => $ressourceId,
+                'statut IN' => self::STATUTS_ACTIFS,
+                'debut <' => $suivant,
+                'fin >' => $premier,
+            ])->all()->toList();
+        $blocages = $this->fetchTable('Blocages')->find()
+            ->where([
+                'ressource_id' => $ressourceId,
+                'debut <' => $suivant,
+                'fin >' => $premier,
+            ])->all()->toList();
+
+        $jours = [];
+        $nbJours = (int)$premier->format('t');
+        for ($j = 1; $j <= $nbJours; $j++) {
+            $debutJour = $premier->setDate($annee, $mois, $j)->setTime(self::HEURE_OUVERTURE, 0, 0);
+            $finJour = $debutJour->setTime(self::HEURE_FERMETURE, 0, 0);
+            $total = (self::HEURE_FERMETURE - self::HEURE_OUVERTURE) * 60;
+
+            $minBlocage = $this->minutesOccupees($blocages, $debutJour, $finJour);
+            $minTotal = $this->minutesOccupees(array_merge($blocages, $reservations), $debutJour, $finJour);
+
+            $statut = 'libre';
+            if ($minBlocage >= $total) {
+                $statut = 'ferme';
+            } elseif ($minTotal >= $total) {
+                $statut = 'complet';
+            } elseif ($minTotal > 0) {
+                $statut = 'partiel';
+            }
+            if ($finJour < DateTime::now()) {
+                $statut = 'passe';
+            }
+            $jours[$j] = $statut;
+        }
+
+        return $jours;
+    }
+
+    /**
+     * Créneaux de 2 heures d'un jour, avec leur disponibilité.
+     *
+     * @return array<int, array{debut: \Cake\I18n\DateTime, fin: \Cake\I18n\DateTime, libre: bool}>
+     */
+    public function creneauxJour(int $ressourceId, DateTime $jour): array
+    {
+        $creneaux = [];
+        for ($h = self::HEURE_OUVERTURE; $h < self::HEURE_FERMETURE; $h += 2) {
+            $debut = $jour->setTime($h, 0, 0);
+            $fin = $jour->setTime($h + 2, 0, 0);
+            $creneaux[] = [
+                'debut' => $debut,
+                'fin' => $fin,
+                'libre' => $debut >= DateTime::now() && !$this->verifierConflit($ressourceId, $debut, $fin),
+            ];
+        }
+
+        return $creneaux;
+    }
+
+    /**
+     * Minutes occupées dans [debut, fin[ en fusionnant les périodes qui se chevauchent.
+     */
+    private function minutesOccupees(array $periodes, DateTime $debut, DateTime $fin): int
+    {
+        $intervalles = [];
+        foreach ($periodes as $p) {
+            $d = max($p->debut->getTimestamp(), $debut->getTimestamp());
+            $f = min($p->fin->getTimestamp(), $fin->getTimestamp());
+            if ($f > $d) {
+                $intervalles[] = [$d, $f];
+            }
+        }
+        usort($intervalles, fn ($a, $b) => $a[0] <=> $b[0]);
+
+        $total = 0;
+        $courant = null;
+        foreach ($intervalles as [$d, $f]) {
+            if ($courant === null) {
+                $courant = [$d, $f];
+            } elseif ($d <= $courant[1]) {
+                $courant[1] = max($courant[1], $f);
+            } else {
+                $total += $courant[1] - $courant[0];
+                $courant = [$d, $f];
+            }
+        }
+        if ($courant !== null) {
+            $total += $courant[1] - $courant[0];
+        }
+
+        return intdiv($total, 60);
     }
 }

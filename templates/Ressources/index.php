@@ -32,7 +32,10 @@ $types = [
                     <p>Tarif : <?= h(number_format((float)$ressource->prix, 0, ',', ' ')) ?> FCFA</p>
                 <?php endif; ?>
             </div>
-            <?= $this->Html->link('Réserver', ['controller' => 'Reservations', 'action' => 'add', $ressource->id], ['class' => 'bouton']) ?>
+            <div class="actions">
+                <?= $this->Html->link('Voir les disponibilités', ['action' => 'view', $ressource->id], ['class' => 'bouton']) ?>
+                <?= $this->Html->link('Réserver', ['controller' => 'Reservations', 'action' => 'add', $ressource->id], ['class' => 'bouton secondaire']) ?>
+            </div> 
         </article>
     <?php endforeach; ?>
 

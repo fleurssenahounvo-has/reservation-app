@@ -17,8 +17,8 @@ echo $this->Html->css('reservation', ['block' => true]);
     <?php endif; ?>
 
     <?= $this->Form->create(null) ?>
-    <?= $this->Form->control('debut', ['type' => 'datetime-local', 'label' => 'Début *', 'required' => true, 'value' => $this->request->getData('debut')]) ?>
-    <?= $this->Form->control('fin', ['type' => 'datetime-local', 'label' => 'Fin *', 'required' => true, 'value' => $this->request->getData('fin')]) ?>
+        <?= $this->Form->control('debut', ['type' => 'datetime-local', 'label' => 'Début *', 'required' => true, 'value' => $this->request->getData('debut') ?? $this->request->getQuery('debut')]) ?>
+    <?= $this->Form->control('fin', ['type' => 'datetime-local', 'label' => 'Fin *', 'required' => true, 'value' => $this->request->getData('fin') ?? $this->request->getQuery('fin')]) ?>
     <?= $this->Form->control('nom_client', ['label' => 'Nom complet *', 'required' => true, 'maxlength' => 100, 'value' => $this->request->getData('nom_client')]) ?>
     <?= $this->Form->control('telephone_client', ['label' => 'Téléphone *', 'required' => true, 'maxlength' => 30, 'value' => $this->request->getData('telephone_client')]) ?>
     <?= $this->Form->control('email_client', ['label' => 'E-mail (facultatif)', 'type' => 'email', 'maxlength' => 150, 'value' => $this->request->getData('email_client')]) ?>

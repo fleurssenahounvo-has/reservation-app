@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use App\Service\ServiceReservation;
+use Cake\I18n\DateTime;
 
 /**
  * Ressources Controller
@@ -39,11 +41,35 @@ class RessourcesController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
-        $ressource = $this->Ressources->get($id, contain: ['Etablissements', 'Blocages', 'Reservations']);
-        $this->set(compact('ressource'));
+    public function view(?string $id = null)
+{
+    $ressource = $this->Ressources->get((int)$id, contain: ['Etablissements']);
+    $service = new ServiceReservation();
+
+    $mois = (string)$this->request->getQuery('mois', DateTime::now()->format('Y-m'));
+    if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $mois)) {
+        $mois = DateTime::now()->format('Y-m');
     }
+    [$annee, $numMois] = array_map('intval', explode('-', $mois));
+    $premier = new DateTime(sprintf('%04d-%02d-01', $annee, $numMois));
+    $jours = $service->disponibilitesMois($ressource->id, $annee, $numMois);
+
+    $jourChoisi = null;
+    $creneaux = [];
+    $jourParam = (string)$this->request->getQuery('jour', '');
+    if (
+        preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $jourParam, $m)
+        && substr($jourParam, 0, 7) === $mois
+        && checkdate((int)$m[2], (int)$m[3], (int)$m[1])
+    ) {
+        $jourChoisi = new DateTime($jourParam);
+        $creneaux = $service->creneauxJour($ressource->id, $jourChoisi);
+    }
+
+    $precedent = $premier->subMonths(1)->format('Y-m');
+    $suivant = $premier->addMonths(1)->format('Y-m');
+    $this->set(compact('ressource', 'jours', 'premier', 'mois', 'precedent', 'suivant', 'jourChoisi', 'creneaux'));
+}
 
     /**
      * Add method

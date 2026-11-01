@@ -2,145 +2,87 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Ressource $ressource
+ * @var array<int, string> $jours
+ * @var \Cake\I18n\DateTime $premier
+ * @var string $mois
+ * @var string $precedent
+ * @var string $suivant
+ * @var \Cake\I18n\DateTime|null $jourChoisi
+ * @var array $creneaux
  */
+$this->assign('title', 'Disponibilités : ' . $ressource->nom);
+echo $this->Html->css('reservation', ['block' => true]);
+$moisNoms = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+$jourNoms = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+$jourLongs = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+$etats = ['libre' => 'Libre', 'partiel' => 'Partiel', 'complet' => 'Complet', 'ferme' => 'Fermé', 'passe' => 'Passé'];
+$decalage = (int)$premier->format('N') - 1;
+$jourChoisiNum = $jourChoisi ? (int)$jourChoisi->format('j') : 0;
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('Edit Ressource'), ['action' => 'edit', $ressource->id], ['class' => 'side-nav-item']) ?>
-            <?= $this->Form->postLink(__('Delete Ressource'), ['action' => 'delete', $ressource->id], ['confirm' => __('Are you sure you want to delete # {0}?', $ressource->id), 'class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('List Ressources'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New Ressource'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
+<div class="ressources">
+    <p><?= $this->Html->link('◀ Retour à la liste', ['action' => 'index']) ?></p>
+    <h1><?= h($ressource->nom) ?> : disponibilités</h1>
+    <p class="etab"><?= h($ressource->etablissement->nom) ?> · <?= (int)$ressource->capacite ?> places</p>
+
+    <div class="calendrier-zone">
+        <div class="calendrier">
+            <div class="cal-entete">
+                <?= $this->Html->link('◀', ['action' => 'view', $ressource->id, '?' => ['mois' => $precedent]]) ?>
+                <strong><?= h($moisNoms[(int)$premier->format('n')] . ' ' . $premier->format('Y')) ?></strong>
+                <?= $this->Html->link('▶', ['action' => 'view', $ressource->id, '?' => ['mois' => $suivant]]) ?>
+            </div>
+            <div class="cal-grille">
+                <?php foreach ($jourNoms as $nom) : ?>
+                    <div class="cal-nom"><?= h($nom) ?></div>
+                <?php endforeach; ?>
+                <?php for ($i = 0; $i < $decalage; $i++) : ?>
+                    <div></div>
+                <?php endfor; ?>
+                <?php foreach ($jours as $numero => $statut) : ?>
+                    <?php $classe = 'cal-jour etat-' . $statut . ($numero === $jourChoisiNum ? ' choisi' : ''); ?>
+                    <?php if (in_array($statut, ['libre', 'partiel'], true)) : ?>
+                        <?= $this->Html->link(
+                            (string)$numero,
+                            ['action' => 'view', $ressource->id, '?' => ['mois' => $mois, 'jour' => sprintf('%s-%02d', $mois, $numero)]],
+                            ['class' => $classe],
+                        ) ?>
+                    <?php else : ?>
+                        <span class="<?= h($classe) ?>"><?= $numero ?></span>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+            <div class="cal-legende">
+                <?php foreach ($etats as $cle => $libelle) : ?>
+                    <span><i class="pastille etat-<?= h($cle) ?>"></i><?= h($libelle) ?></span>
+                <?php endforeach; ?>
+            </div>
         </div>
-    </aside>
-    <div class="column column-80">
-        <div class="ressources view content">
-            <h3><?= h($ressource->nom) ?></h3>
-            <table>
-                <tr>
-                    <th><?= __('Etablissement') ?></th>
-                    <td><?= $ressource->hasValue('etablissement') ? $this->Html->link($ressource->etablissement->nom, ['controller' => 'Etablissements', 'action' => 'view', $ressource->etablissement->id]) : '' ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Nom') ?></th>
-                    <td><?= h($ressource->nom) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Type') ?></th>
-                    <td><?= h($ressource->type) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Id') ?></th>
-                    <td><?= $this->Number->format($ressource->id) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Capacite') ?></th>
-                    <td><?= $this->Number->format($ressource->capacite) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Prix') ?></th>
-                    <td><?= $ressource->prix === null ? '' : $this->Number->format($ressource->prix) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Created') ?></th>
-                    <td><?= h($ressource->created) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Modified') ?></th>
-                    <td><?= h($ressource->modified) ?></td>
-                </tr>
-            </table>
-            <div class="related">
-                <h4><?= __('Related Blocages') ?></h4>
-                <?php if (!empty($ressource->blocages)) : ?>
-                <div class="table-responsive">
-                    <table>
-                        <tr>
-                            <th><?= __('Id') ?></th>
-                            <th><?= __('Debut') ?></th>
-                            <th><?= __('Fin') ?></th>
-                            <th><?= __('Motif') ?></th>
-                            <th><?= __('Created') ?></th>
-                            <th><?= __('Modified') ?></th>
-                            <th class="actions"><?= __('Actions') ?></th>
-                        </tr>
-                        <?php foreach ($ressource->blocages as $blocage) : ?>
-                        <tr>
-                            <td><?= h($blocage->id) ?></td>
-                            <td><?= h($blocage->debut) ?></td>
-                            <td><?= h($blocage->fin) ?></td>
-                            <td><?= h($blocage->motif) ?></td>
-                            <td><?= h($blocage->created) ?></td>
-                            <td><?= h($blocage->modified) ?></td>
-                            <td class="actions">
-                                <?= $this->Html->link(__('View'), ['controller' => 'Blocages', 'action' => 'view', $blocage->id]) ?>
-                                <?= $this->Html->link(__('Edit'), ['controller' => 'Blocages', 'action' => 'edit', $blocage->id]) ?>
-                                <?= $this->Form->postLink(
-                                    __('Delete'),
-                                    ['controller' => 'Blocages', 'action' => 'delete', $blocage->id],
-                                    [
-                                        'method' => 'delete',
-                                        'confirm' => __('Are you sure you want to delete # {0}?', $blocage->id),
-                                    ]
-                                ) ?>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </table>
-                </div>
-                <?php endif; ?>
-            </div>
-            <div class="related">
-                <h4><?= __('Related Reservations') ?></h4>
-                <?php if (!empty($ressource->reservations)) : ?>
-                <div class="table-responsive">
-                    <table>
-                        <tr>
-                            <th><?= __('Id') ?></th>
-                            <th><?= __('Utilisateur Id') ?></th>
-                            <th><?= __('Nom Client') ?></th>
-                            <th><?= __('Telephone Client') ?></th>
-                            <th><?= __('Email Client') ?></th>
-                            <th><?= __('Debut') ?></th>
-                            <th><?= __('Fin') ?></th>
-                            <th><?= __('Statut') ?></th>
-                            <th><?= __('Source') ?></th>
-                            <th><?= __('Created') ?></th>
-                            <th><?= __('Modified') ?></th>
-                            <th class="actions"><?= __('Actions') ?></th>
-                        </tr>
-                        <?php foreach ($ressource->reservations as $reservation) : ?>
-                        <tr>
-                            <td><?= h($reservation->id) ?></td>
-                            <td><?= h($reservation->utilisateur_id) ?></td>
-                            <td><?= h($reservation->nom_client) ?></td>
-                            <td><?= h($reservation->telephone_client) ?></td>
-                            <td><?= h($reservation->email_client) ?></td>
-                            <td><?= h($reservation->debut) ?></td>
-                            <td><?= h($reservation->fin) ?></td>
-                            <td><?= h($reservation->statut) ?></td>
-                            <td><?= h($reservation->source) ?></td>
-                            <td><?= h($reservation->created) ?></td>
-                            <td><?= h($reservation->modified) ?></td>
-                            <td class="actions">
-                                <?= $this->Html->link(__('View'), ['controller' => 'Reservations', 'action' => 'view', $reservation->id]) ?>
-                                <?= $this->Html->link(__('Edit'), ['controller' => 'Reservations', 'action' => 'edit', $reservation->id]) ?>
-                                <?= $this->Form->postLink(
-                                    __('Delete'),
-                                    ['controller' => 'Reservations', 'action' => 'delete', $reservation->id],
-                                    [
-                                        'method' => 'delete',
-                                        'confirm' => __('Are you sure you want to delete # {0}?', $reservation->id),
-                                    ]
-                                ) ?>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </table>
-                </div>
-                <?php endif; ?>
-            </div>
+
+        <div class="creneaux">
+            <?php if ($jourChoisi) : ?>
+                <h2><?= h(ucfirst($jourLongs[(int)$jourChoisi->format('N') - 1]) . ' ' . $jourChoisi->format('d/m/Y')) ?></h2>
+                <?php foreach ($creneaux as $c) : ?>
+                    <div class="creneau <?= $c['libre'] ? 'libre' : 'occupe' ?>">
+                        <span><?= h($c['debut']->format('H:i') . ' – ' . $c['fin']->format('H:i')) ?></span>
+                        <?php if ($c['libre']) : ?>
+                            <?= $this->Html->link('Réserver', [
+                                'controller' => 'Reservations',
+                                'action' => 'add',
+                                $ressource->id,
+                                '?' => [
+                                    'debut' => $c['debut']->format('Y-m-d\TH:i'),
+                                    'fin' => $c['fin']->format('Y-m-d\TH:i'),
+                                ],
+                            ], ['class' => 'bouton']) ?>
+                        <?php else : ?>
+                            <em>Indisponible</em>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <p class="etab">Choisissez un jour libre ou partiel dans le calendrier pour voir les créneaux.</p>
+            <?php endif; ?>
+            <p><?= $this->Html->link('Autre horaire', ['controller' => 'Reservations', 'action' => 'add', $ressource->id]) ?></p>
         </div>
     </div>
 </div>
