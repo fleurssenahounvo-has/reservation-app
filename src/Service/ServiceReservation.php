@@ -47,7 +47,7 @@ class ServiceReservation
         $reservations = $this->fetchTable('Reservations');
 
         return $reservations->getConnection()->transactional(
-            function () use ($reservations, $ressourceId, $debut, $fin, $donnees) {
+            function () use ($reservations, $ressourceId, $debut, $fin, $donnees, $statut) {
                 $ressource = $this->fetchTable('Ressources')->find()
                     ->where(['id' => $ressourceId])
                     ->epilog('FOR UPDATE')
@@ -70,7 +70,7 @@ class ServiceReservation
                     'email_client' => $donnees['email_client'] ?? null,
                     'debut' => $debut,
                     'fin' => $fin,
-                    'statut' => 'en_attente',
+                    'statut' => $statut,
                     'source' => $donnees['source'] ?? 'en_ligne',
                 ]);
 

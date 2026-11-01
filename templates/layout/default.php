@@ -52,7 +52,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <?= $this->Html->link('Inscrire mon établissement', ['controller' => 'Etablissements', 'action' => 'inscription']) ?>
         <?= $this->Html->link('Espace gestionnaire', ['controller' => 'Utilisateurs', 'action' => 'login']) ?>
     <?php endif; ?>
-</div>
+    </div>
 </nav>
     <main class="main">
         <div class="container">

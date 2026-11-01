@@ -61,7 +61,7 @@ class EtablissementsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator): Validator
+        public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->scalar('nom')
@@ -78,14 +78,16 @@ class EtablissementsTable extends Table
         $validator
             ->scalar('adresse')
             ->maxLength('adresse', 255)
-            ->requirePresence('adresse', 'create')
-            ->notEmptyString('adresse');
+            ->allowEmptyString('adresse');
 
         $validator
             ->scalar('telephone')
             ->maxLength('telephone', 30)
-            ->requirePresence('telephone', 'create')
-            ->notEmptyString('telephone');
+            ->allowEmptyString('telephone');
+
+        $validator
+            ->boolean('valide')
+            ->allowEmptyString('valide');
 
         return $validator;
     }

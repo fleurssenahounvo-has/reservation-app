@@ -67,10 +67,11 @@ class RessourcesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator): Validator
+        public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->integer('etablissement_id')
+            ->requirePresence('etablissement_id', 'create')
             ->notEmptyString('etablissement_id');
 
         $validator
