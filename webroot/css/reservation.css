@@ -47,3 +47,5 @@
 .actions a.bouton.secondaire:link,
 .actions a.bouton.secondaire:visited { background: #fff; color: #0F6E56; border: 1px solid #0F6E56; }
 .actions a.bouton.secondaire:hover { background: #E1F5EE; color: #0F6E56; }
+.actions a.bouton { padding: .6rem 1.1rem; font-weight: 600; font-size: 1rem; line-height: 1.2; display: inline-block; }
+.creneau a.bouton, .creneau a.bouton:link, .creneau a.bouton:visited { background: #0F6E56; color: #fff; padding: .4rem .9rem; }
