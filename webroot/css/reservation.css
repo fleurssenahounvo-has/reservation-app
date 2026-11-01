@@ -38,3 +38,12 @@
 .actions { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: flex-end; }
 .bouton.secondaire { background: #fff; color: #0F6E56; border: 1px solid #0F6E56; }
 .bouton.secondaire:hover { background: #E1F5EE; }
+.actions { gap: .75rem; }
+.actions a.bouton,
+.actions a.bouton:link,
+.actions a.bouton:visited { background: #0F6E56; color: #fff; border: 1px solid #0F6E56; }
+.actions a.bouton:hover { background: #0b5643; color: #fff; }
+.actions a.bouton.secondaire,
+.actions a.bouton.secondaire:link,
+.actions a.bouton.secondaire:visited { background: #fff; color: #0F6E56; border: 1px solid #0F6E56; }
+.actions a.bouton.secondaire:hover { background: #E1F5EE; color: #0F6E56; }
