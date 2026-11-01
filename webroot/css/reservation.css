@@ -49,3 +49,4 @@
 .actions a.bouton.secondaire:hover { background: #E1F5EE; color: #0F6E56; }
 .actions a.bouton { padding: .6rem 1.1rem; font-weight: 600; font-size: 1rem; line-height: 1.2; display: inline-block; }
 .creneau a.bouton, .creneau a.bouton:link, .creneau a.bouton:visited { background: #0F6E56; color: #fff; padding: .4rem .9rem; }
+.creneaux h2 { font-size: 1.15rem; font-weight: 700; letter-spacing: normal; line-height: 1.3; margin: 0 0 1rem; }
