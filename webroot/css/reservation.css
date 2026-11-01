@@ -66,3 +66,4 @@
 .bouton.petit, .bouton.petit:link, .bouton.petit:visited { padding: .35rem .7rem; font-size: .9rem; background: #0F6E56; color: #fff; border: 1px solid #0F6E56; display: inline-block; }
 .bouton.petit.secondaire, .bouton.petit.secondaire:link, .bouton.petit.secondaire:visited { background: #fff; color: #0F6E56; }
 .top-nav-links { display: flex; gap: 1.5rem; align-items: center; }
+.badge { font-size: .9rem; padding: .25rem .75rem; letter-spacing: normal; text-transform: none; }
