@@ -7,6 +7,8 @@ use App\Service\ServiceReservation;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\I18n\DateTime;
+use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Query\SelectQuery;
 
 class RessourcesController extends AppController
 {
@@ -24,7 +26,9 @@ class RessourcesController extends AppController
 
     public function index()
     {
-        $query = $this->Ressources->find()->contain(['Etablissements']);
+        $query = $this->Ressources->find()
+    ->contain(['Etablissements'])
+    ->innerJoinWith('Etablissements', fn (SelectQuery $q) => $q->where(['Etablissements.valide' => true]));
 
         $type = $this->request->getQuery('type');
         if (!empty($type)) {
@@ -42,6 +46,15 @@ class RessourcesController extends AppController
     public function view(?string $id = null)
     {
         $ressource = $this->Ressources->get((int)$id, contain: ['Etablissements']);
+        if (!$ressource->etablissement->valide) {
+    $identite = $this->Authentication->getIdentity();
+    $proprietaire = $identite?->get('role') === 'gestionnaire'
+        && (int)$identite->get('etablissement_id') === (int)$ressource->etablissement_id;
+    $admin = $identite?->get('role') === 'administrateur';
+    if (!$proprietaire && !$admin) {
+        throw new NotFoundException();
+    }
+}
         $service = new ServiceReservation();
 
         $mois = (string)$this->request->getQuery('mois', DateTime::now()->format('Y-m'));

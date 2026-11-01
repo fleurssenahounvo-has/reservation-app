@@ -22,6 +22,9 @@ class ReservationsController extends AppController
     public function add(?string $ressourceId = null)
     {
         $ressource = $this->fetchTable('Ressources')->get((int)$ressourceId, contain: ['Etablissements']);
+        if (!$ressource->etablissement->valide) {
+    throw new \Cake\Http\Exception\NotFoundException();
+    }
         $erreur = null;
 
         if ($this->request->is('post')) {

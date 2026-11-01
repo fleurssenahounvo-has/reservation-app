@@ -39,15 +39,20 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <a href="<?= $this->Url->build('/') ?>"><span>Réservation</span> en ligne</a>
     </div>
     <div class="top-nav-links">
-        <?php if ($this->request->getAttribute('identity')) : ?>
-            <?= $this->Html->link('Fermetures', ['controller' => 'Blocages', 'action' => 'gestion']) ?>
-            <?= $this->Html->link('Mes réservations', ['controller' => 'Reservations', 'action' => 'gestion']) ?>
-            <?= $this->Html->link('Mes ressources', ['controller' => 'Ressources', 'action' => 'gestion']) ?>
-            <?= $this->Html->link('Déconnexion', ['controller' => 'Utilisateurs', 'action' => 'logout']) ?>
-        <?php else : ?>
-            <?= $this->Html->link('Espace gestionnaire', ['controller' => 'Utilisateurs', 'action' => 'login']) ?>
-        <?php endif; ?>
-    </div>
+    <?php $identite = $this->request->getAttribute('identity'); ?>
+    <?php if ($identite && $identite->get('role') === 'administrateur') : ?>
+        <?= $this->Html->link('Établissements', ['controller' => 'Etablissements', 'action' => 'administration']) ?>
+        <?= $this->Html->link('Déconnexion', ['controller' => 'Utilisateurs', 'action' => 'logout']) ?>
+    <?php elseif ($identite) : ?>
+        <?= $this->Html->link('Mes ressources', ['controller' => 'Ressources', 'action' => 'gestion']) ?>
+        <?= $this->Html->link('Fermetures', ['controller' => 'Blocages', 'action' => 'gestion']) ?>
+        <?= $this->Html->link('Mes réservations', ['controller' => 'Reservations', 'action' => 'gestion']) ?>
+        <?= $this->Html->link('Déconnexion', ['controller' => 'Utilisateurs', 'action' => 'logout']) ?>
+    <?php else : ?>
+        <?= $this->Html->link('Inscrire mon établissement', ['controller' => 'Etablissements', 'action' => 'inscription']) ?>
+        <?= $this->Html->link('Espace gestionnaire', ['controller' => 'Utilisateurs', 'action' => 'login']) ?>
+    <?php endif; ?>
+</div>
 </nav>
     <main class="main">
         <div class="container">

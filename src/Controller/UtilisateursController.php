@@ -19,8 +19,11 @@ class UtilisateursController extends AppController
         $result = $this->Authentication->getResult();
 
         if ($result !== null && $result->isValid()) {
-            $cible = $this->Authentication->getLoginRedirect()
-                ?? ['controller' => 'Reservations', 'action' => 'gestion'];
+        $role = $result->getData()->get('role');
+        $parDefaut = $role === 'administrateur'
+        ? ['controller' => 'Etablissements', 'action' => 'administration']
+        : ['controller' => 'Reservations', 'action' => 'gestion'];
+        $cible = $this->Authentication->getLoginRedirect() ?? $parDefaut;
 
             return $this->redirect($cible);
         }
