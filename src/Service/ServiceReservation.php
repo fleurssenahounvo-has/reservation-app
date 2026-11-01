@@ -23,6 +23,7 @@ class ServiceReservation
 
     public function reserver(array $donnees)
     {
+        $this->expirerEnAttente();
         $ressourceId = (int)($donnees['ressource_id'] ?? 0);
         $debut = new DateTime($donnees['debut'] ?? 'now');
         $fin = new DateTime($donnees['fin'] ?? 'now');
@@ -104,10 +105,25 @@ class ServiceReservation
             ->count() > 0;
     }
 
+        public function confirmer(int $reservationId)
+    {
+        $reservations = $this->fetchTable('Reservations');
+        $reservation = $reservations->get($reservationId);
+        if ($reservation->statut !== 'en_attente') {
+            throw new InvalidArgumentException('Seule une réservation en attente peut être confirmée.');
+        }
+        $reservation->statut = 'confirmee';
+
+        return $reservations->saveOrFail($reservation);
+    }
+
     public function annuler(int $reservationId)
     {
         $reservations = $this->fetchTable('Reservations');
         $reservation = $reservations->get($reservationId);
+        if (!in_array($reservation->statut, self::STATUTS_ACTIFS, true)) {
+            throw new InvalidArgumentException('Cette réservation est déjà annulée ou expirée.');
+        }
         $reservation->statut = 'annulee';
 
         return $reservations->saveOrFail($reservation);

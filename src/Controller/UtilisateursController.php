@@ -20,7 +20,7 @@ class UtilisateursController extends AppController
 
         if ($result !== null && $result->isValid()) {
             $cible = $this->Authentication->getLoginRedirect()
-                ?? ['controller' => 'Ressources', 'action' => 'index'];
+                ?? ['controller' => 'Reservations', 'action' => 'gestion'];
 
             return $this->redirect($cible);
         }
