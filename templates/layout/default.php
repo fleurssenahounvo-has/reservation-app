@@ -40,6 +40,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     </div>
     <div class="top-nav-links">
         <?php if ($this->request->getAttribute('identity')) : ?>
+            <?= $this->Html->link('Fermetures', ['controller' => 'Blocages', 'action' => 'gestion']) ?>
             <?= $this->Html->link('Mes réservations', ['controller' => 'Reservations', 'action' => 'gestion']) ?>
             <?= $this->Html->link('Mes ressources', ['controller' => 'Ressources', 'action' => 'gestion']) ?>
             <?= $this->Html->link('Déconnexion', ['controller' => 'Utilisateurs', 'action' => 'logout']) ?>

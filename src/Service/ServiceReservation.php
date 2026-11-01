@@ -246,4 +246,39 @@ class ServiceReservation
 
         return intdiv($total, 60);
     }
+        /**
+     * Bloque une période. Refuse si elle chevauche une réservation active ou un blocage.
+     */
+    public function bloquerDates(int $ressourceId, DateTime $debut, DateTime $fin, ?string $motif = null)
+    {
+        if ($fin <= $debut) {
+            throw new InvalidArgumentException('La fin doit être après le début.');
+        }
+        $blocages = $this->fetchTable('Blocages');
+
+        return $blocages->getConnection()->transactional(
+            function () use ($blocages, $ressourceId, $debut, $fin, $motif) {
+                $ressource = $this->fetchTable('Ressources')->find()
+                    ->where(['id' => $ressourceId])
+                    ->epilog('FOR UPDATE')
+                    ->first();
+                if ($ressource === null) {
+                    throw new InvalidArgumentException('Ressource introuvable.');
+                }
+                if ($this->verifierConflit($ressourceId, $debut, $fin)) {
+                    throw new ConflitReservationException(
+                        'Cette période chevauche une réservation ou un blocage existant. '
+                        . 'Annulez ou déplacez les réservations concernées avant de bloquer.'
+                    );
+                }
+
+                return $blocages->saveOrFail($blocages->newEntity([
+                    'ressource_id' => $ressourceId,
+                    'debut' => $debut,
+                    'fin' => $fin,
+                    'motif' => $motif !== null && trim($motif) !== '' ? trim($motif) : null,
+                ]));
+            }
+        );
+    }
 }
