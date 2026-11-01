@@ -10,6 +10,11 @@ use InvalidArgumentException;
 
 class ReservationsController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        $this->Authentication->allowUnauthenticated(['add', 'confirmation']);
+    }
     public function add(?string $ressourceId = null)
     {
         $ressource = $this->fetchTable('Ressources')->get((int)$ressourceId, contain: ['Etablissements']);

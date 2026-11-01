@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
@@ -15,6 +16,7 @@ use Cake\ORM\Entity;
  * @property string $role
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
+ * @property int|null $etablissement_id
  *
  * @property \App\Model\Entity\Reservation[] $reservations
  */
@@ -36,6 +38,14 @@ class Utilisateur extends Entity
         'role' => true,
         'created' => true,
         'modified' => true,
+        'etablissement_id' => true,
         'reservations' => true,
     ];
+        protected array $_hidden = ['mot_de_passe'];
+
+    protected function _setMotDePasse(string $password): string
+    {
+        return $password !== '' ? (new DefaultPasswordHasher())->hash($password) : $password;
+    }
+
 }

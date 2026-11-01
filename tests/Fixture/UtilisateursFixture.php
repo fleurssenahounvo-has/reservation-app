@@ -24,8 +24,9 @@ class UtilisateursFixture extends TestFixture
                 'email' => 'Lorem ipsum dolor sit amet',
                 'mot_de_passe' => 'Lorem ipsum dolor sit amet',
                 'role' => 'Lorem ipsum dolor ',
-                'created' => '2026-10-31 22:30:17',
-                'modified' => '2026-10-31 22:30:17',
+                'created' => '2026-11-01 09:35:13',
+                'modified' => '2026-11-01 09:35:13',
+                'etablissement_id' => 1,
             ],
         ];
         parent::init();

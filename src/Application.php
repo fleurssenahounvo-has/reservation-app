@@ -29,6 +29,12 @@ use Cake\Http\MiddlewareQueue;
 use Cake\ORM\Locator\TableLocator;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Authentication\AuthenticationService;
+use Authentication\AuthenticationServiceInterface;
+use Authentication\AuthenticationServiceProviderInterface;
+use Authentication\Middleware\AuthenticationMiddleware;
+use Cake\Routing\Router;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Application setup class.
@@ -38,7 +44,7 @@ use Cake\Routing\Middleware\RoutingMiddleware;
  *
  * @extends \Cake\Http\BaseApplication<\App\Application>
  */
-class Application extends BaseApplication
+class Application extends BaseApplication implements AuthenticationServiceProviderInterface
 {
     /**
      * Load all the application configuration and bootstrap logic.
@@ -90,6 +96,7 @@ class Application extends BaseApplication
             // available as array through $request->getData()
             // https://book.cakephp.org/5/en/controllers/middleware.html#body-parser-middleware
             ->add(new BodyParserMiddleware())
+            ->add(new AuthenticationMiddleware($this))
 
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/5/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
@@ -125,5 +132,32 @@ class Application extends BaseApplication
         // $eventManager->on(new SomeCustomListenerClass());
 
         return $eventManager;
+    }
+        public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
+    {
+        $loginUrl = Router::url(['controller' => 'Utilisateurs', 'action' => 'login']);
+        $service = new AuthenticationService();
+        $service->setConfig([
+            'unauthenticatedRedirect' => $loginUrl,
+            'queryParam' => 'redirect',
+        ]);
+
+        $champs = ['username' => 'email', 'password' => 'mot_de_passe'];
+
+        $service->loadAuthenticator('Authentication.Session');
+        $service->loadAuthenticator('Authentication.Form', [
+            'fields' => $champs,
+            'loginUrl' => $loginUrl,
+            'identifier' => [
+                'className' => 'Authentication.Password',
+                'fields' => $champs,
+                'resolver' => [
+                    'className' => 'Authentication.Orm',
+                    'userModel' => 'Utilisateurs',
+                ],
+            ],
+        ]);
+
+        return $service;
     }
 }

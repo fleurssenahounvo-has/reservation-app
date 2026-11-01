@@ -50,6 +50,9 @@ class EtablissementsTable extends Table
         $this->hasMany('Ressources', [
             'foreignKey' => 'etablissement_id',
         ]);
+        $this->hasMany('Utilisateurs', [
+            'foreignKey' => 'etablissement_id',
+        ]);
     }
 
     /**
@@ -75,13 +78,13 @@ class EtablissementsTable extends Table
         $validator
             ->scalar('adresse')
             ->maxLength('adresse', 255)
-            ->allowEmptyString('adresse', 'create')
+            ->requirePresence('adresse', 'create')
             ->notEmptyString('adresse');
 
         $validator
             ->scalar('telephone')
             ->maxLength('telephone', 30)
-            ->allowEmptyString('telephone', 'create')
+            ->requirePresence('telephone', 'create')
             ->notEmptyString('telephone');
 
         return $validator;

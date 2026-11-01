@@ -47,6 +47,9 @@ class UtilisateursTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->belongsTo('Etablissements', [
+            'foreignKey' => 'etablissement_id',
+        ]);
         $this->hasMany('Reservations', [
             'foreignKey' => 'utilisateur_id',
         ]);
@@ -83,6 +86,10 @@ class UtilisateursTable extends Table
             ->maxLength('role', 20)
             ->notEmptyString('role');
 
+        $validator
+            ->integer('etablissement_id')
+            ->allowEmptyString('etablissement_id');
+
         return $validator;
     }
 
@@ -96,6 +103,7 @@ class UtilisateursTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
+        $rules->add($rules->existsIn(['etablissement_id'], 'Etablissements'), ['errorField' => 'etablissement_id']);
 
         return $rules;
     }

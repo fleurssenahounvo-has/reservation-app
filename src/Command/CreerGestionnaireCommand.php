@@ -1,0 +1,55 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Command;
+
+use Cake\Command\Command;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
+use Cake\ORM\Locator\LocatorAwareTrait;
+
+class CreerGestionnaireCommand extends Command
+{
+    use LocatorAwareTrait;
+
+    public static function defaultName(): string
+    {
+        return 'creer_gestionnaire';
+    }
+
+    protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
+    {
+        return $parser
+            ->addArgument('email', ['help' => 'Adresse e-mail', 'required' => true])
+            ->addArgument('nom', ['help' => 'Nom complet', 'required' => true])
+            ->addArgument('etablissement_id', ['help' => "Numéro de l'établissement", 'required' => true]);
+    }
+
+    public function execute(Arguments $args, ConsoleIo $io): int
+    {
+        $motDePasse = (string)$io->ask('Mot de passe (8 caractères minimum)');
+        if (strlen($motDePasse) < 8) {
+            $io->err('Mot de passe trop court.');
+
+            return static::CODE_ERROR;
+        }
+
+        $table = $this->fetchTable('Utilisateurs');
+        $utilisateur = $table->newEntity([
+            'email' => $args->getArgument('email'),
+            'nom' => $args->getArgument('nom'),
+            'mot_de_passe' => $motDePasse,
+            'role' => 'gestionnaire',
+            'etablissement_id' => (int)$args->getArgument('etablissement_id'),
+        ]);
+        if (!$table->save($utilisateur)) {
+            $io->err('Échec : ' . json_encode($utilisateur->getErrors()));
+
+            return static::CODE_ERROR;
+        }
+        $io->out('Gestionnaire créé : ' . $utilisateur->email);
+
+        return static::CODE_SUCCESS;
+    }
+}

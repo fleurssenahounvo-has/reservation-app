@@ -34,9 +34,16 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->fetch('script') ?>
 </head>
 <body>
-    <nav class="top-nav">
+<nav class="top-nav">
     <div class="top-nav-title">
         <a href="<?= $this->Url->build('/') ?>"><span>Réservation</span> en ligne</a>
+    </div>
+    <div class="top-nav-links">
+        <?php if ($this->request->getAttribute('identity')) : ?>
+            <?= $this->Html->link('Déconnexion', ['controller' => 'Utilisateurs', 'action' => 'logout']) ?>
+        <?php else : ?>
+            <?= $this->Html->link('Espace gestionnaire', ['controller' => 'Utilisateurs', 'action' => 'login']) ?>
+        <?php endif; ?>
     </div>
 </nav>
     <main class="main">
