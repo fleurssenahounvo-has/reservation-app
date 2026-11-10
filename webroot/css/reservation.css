@@ -68,4 +68,5 @@
 .top-nav-links { display: flex; gap: 1.5rem; align-items: center; }
 .badge { font-size: .9rem; padding: .25rem .75rem; letter-spacing: normal; text-transform: none; }
 .table-gestion a.bouton.petit { font-size: .95rem !important; font-weight: 600; letter-spacing: normal; text-transform: none; padding: .4rem .8rem; }
-.actions-ligne { display: flex; gap: .5rem; flex-wrap: wrap; }
+.actions-ligne > * { margin-right: .5rem; }
+.actions-ligne form { display: inline; }

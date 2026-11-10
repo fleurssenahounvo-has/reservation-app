@@ -1,0 +1,124 @@
+/* Thème du site : à charger après cake.css et reservation.css */
+:root {
+  --vert: #0F6E56;
+  --vert-profond: #0A4A3B;
+  --vert-pale: #E3F3EC;
+  --jaune: #F4B400;
+  --jaune-pale: #FFF1C7;
+  --rouge: #C8102E;
+  --rouge-pale: #FCE4E7;
+  --encre: #17241F;
+  --gris: #5B6B65;
+  --trait: #DCE5E0;
+  --fond: #F5F7F4;
+}
+
+body { background: var(--fond); color: var(--encre); }
+
+/* ---------- En-tête ---------- */
+.top-nav { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem 1.5rem;
+  background: #fff; border-bottom: 1px solid var(--trait); padding: .7rem 1.5rem; }
+.top-nav a.marque, .top-nav a.marque:link, .top-nav a.marque:visited { display: flex; align-items: center; gap: .65rem;
+  color: var(--vert-profond); font-weight: 800; font-size: 1.15rem; letter-spacing: -.01em; text-decoration: none; }
+.top-nav a.marque img { display: block; width: 36px; height: 36px; }
+.top-nav-links { display: flex; flex-wrap: wrap; gap: .25rem 1.4rem; align-items: center; }
+.top-nav-links a, .top-nav-links a:link, .top-nav-links a:visited { color: var(--encre); font-weight: 600; text-decoration: none; padding: .25rem 0; border-bottom: 2px solid transparent; }
+.top-nav-links a:hover { border-bottom-color: var(--jaune); }
+
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid #1F4FD8; outline-offset: 2px; }
+
+/* ---------- Page d'accueil ---------- */
+.accueil { max-width: 1080px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+.hero { position: relative; overflow: hidden; display: grid; grid-template-columns: 1.25fr .75fr; gap: 2rem; align-items: center;
+  background-color: var(--vert-profond); color: #fff; border-radius: 20px; padding: 3rem 2.5rem 4.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.08' stroke-width='2'%3E%3Ccircle cx='0' cy='0' r='13'/%3E%3Ccircle cx='0' cy='0' r='24'/%3E%3Ccircle cx='56' cy='56' r='13'/%3E%3Ccircle cx='56' cy='56' r='24'/%3E%3Ccircle cx='56' cy='0' r='9'/%3E%3Ccircle cx='0' cy='56' r='9'/%3E%3C/g%3E%3C/svg%3E"); }
+.hero::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: linear-gradient(90deg, var(--vert) 0 33%, var(--jaune) 33% 66%, var(--rouge) 66% 100%); }
+.hero h1 { color: #fff; font-weight: 800; font-size: clamp(1.9rem, 4.2vw, 2.9rem); line-height: 1.08; letter-spacing: -.02em; margin: 0 0 1rem; }
+.hero-texte p { color: #D6EBE3; font-size: 1.1rem; line-height: 1.5; max-width: 34ch; margin: 0 0 1.5rem; }
+.hero a.bouton-jaune, .hero a.bouton-jaune:link, .hero a.bouton-jaune:visited { display: inline-block; background: var(--jaune); color: #2A1F00;
+  font-weight: 800; padding: .8rem 1.4rem; border-radius: 10px; text-decoration: none; }
+.hero a.bouton-jaune:hover { background: #FFC933; }
+
+.hero-demo { background: #fff; color: var(--encre); border-radius: 16px; padding: 1rem 1.1rem 1.1rem; box-shadow: 0 18px 40px rgba(0, 0, 0, .25); transform: rotate(1.6deg); }
+.hero-demo .titre { color: var(--encre); font-weight: 800; margin: 0 0 .15rem; font-size: 1rem; }
+.hero-demo .sous-titre { color: var(--gris); font-size: .85rem; margin: 0 0 .75rem; }
+.slot { display: flex; justify-content: space-between; align-items: center; gap: .5rem; border: 1px solid var(--trait); border-radius: 8px; padding: .45rem .7rem; margin-bottom: .4rem; font-size: .9rem; font-weight: 600; }
+.slot span:last-child { font-weight: 700; color: var(--vert); }
+.slot.pris { background: #F1F3F2; color: #8A9792; }
+.slot.pris span:last-child { color: var(--rouge); }
+.slot.choisi { background: var(--jaune); border-color: var(--jaune); color: #2A1F00; }
+.slot.choisi span:last-child { color: #2A1F00; }
+.hero-demo .legende { color: var(--gris); font-size: .78rem; margin: .6rem 0 0; }
+
+/* ---------- Recherche ---------- */
+.recherche { position: relative; margin: -2.2rem 1.5rem 0; background: #fff; border: 1px solid var(--trait); border-radius: 14px; padding: 1rem 1.25rem; box-shadow: 0 10px 24px rgba(10, 74, 59, .08); }
+.recherche .filtres { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin: 0; }
+.recherche label { font-weight: 700; color: var(--encre); }
+.recherche button, .recherche button:hover { background: var(--vert); border-color: var(--vert); color: #fff; text-transform: none; letter-spacing: normal; font-weight: 700; border-radius: 8px; }
+.recherche button:hover { background: var(--vert-profond); }
+
+/* ---------- Liste des ressources ---------- */
+.liste { background: #fff; border: 1px solid var(--trait); border-radius: 16px; margin-top: 1.5rem; overflow: hidden; }
+.ressource { display: grid; grid-template-columns: 64px 1fr auto auto; gap: 1.1rem; align-items: center; padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--trait); }
+.ressource:last-child { border-bottom: 0; }
+.ressource:hover { background: #FAFCFB; }
+.ressource .tuile { width: 64px; height: 64px; border-radius: 14px; display: grid; place-items: center; }
+.ressource .tuile svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ressource.type-conference .tuile { background: var(--vert-pale); color: var(--vert); }
+.ressource.type-reception .tuile { background: var(--jaune-pale); color: #8A6400; }
+.ressource.type-table .tuile { background: var(--rouge-pale); color: var(--rouge); }
+.ressource h2 { margin: 0 0 .15rem; font-size: 1.2rem; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; color: var(--encre); }
+.ressource .meta, .ressource .etab { margin: 0; color: var(--gris); font-size: .95rem; line-height: 1.4; }
+.ressource .prix { text-align: right; line-height: 1.25; }
+.ressource .prix strong { display: block; font-size: 1.05rem; font-weight: 800; }
+.ressource .prix small { color: var(--gris); font-size: .8rem; }
+.ressource .actions { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: flex-end; }
+.ressource a.bouton, .ressource a.bouton:link, .ressource a.bouton:visited { display: inline-block; background: var(--vert); color: #fff; border: 1px solid var(--vert);
+  padding: .55rem 1rem; border-radius: 8px; font-weight: 700; font-size: .95rem; line-height: 1.2; text-decoration: none; white-space: nowrap; }
+.ressource a.bouton:hover { background: var(--vert-profond); border-color: var(--vert-profond); }
+.ressource a.bouton.secondaire, .ressource a.bouton.secondaire:link, .ressource a.bouton.secondaire:visited { background: #fff; color: var(--vert); }
+.ressource a.bouton.secondaire:hover { background: var(--vert-pale); }
+
+.vide { background: #fff; border: 1px dashed #B9C7C0; border-radius: 16px; padding: 2rem 1.5rem; margin-top: 1.5rem; text-align: center; }
+.vide h2 { margin: 0 0 .4rem; font-size: 1.25rem; font-weight: 800; letter-spacing: normal; color: var(--encre); }
+.vide p { margin: 0 auto 1rem; max-width: 46ch; color: var(--gris); }
+.vide a.bouton, .vide a.bouton:link, .vide a.bouton:visited { display: inline-block; background: var(--vert); color: #fff; padding: .65rem 1.2rem; border-radius: 8px; font-weight: 700; text-decoration: none; }
+
+/* ---------- Comment ça marche ---------- */
+.etapes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2.5rem 0 0; padding: 0; list-style: none; counter-reset: etape; }
+.etapes li { counter-increment: etape; position: relative; padding-top: 3rem; }
+.etapes li::before { content: counter(etape); position: absolute; top: 0; left: 0; width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--jaune); color: #2A1F00; font-weight: 800; }
+.etapes h3 { margin: 0 0 .3rem; font-size: 1.1rem; font-weight: 800; letter-spacing: normal; color: var(--encre); }
+.etapes p { margin: 0; color: var(--gris); max-width: 32ch; line-height: 1.5; }
+
+.invitation { margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; justify-content: space-between;
+  border-left: 6px solid var(--jaune); background: #fff; border-radius: 0 14px 14px 0; padding: 1.2rem 1.5rem; }
+.invitation strong { display: block; font-size: 1.1rem; font-weight: 800; color: var(--encre); }
+.invitation span { color: var(--gris); }
+.invitation a.bouton, .invitation a.bouton:link, .invitation a.bouton:visited { background: var(--vert); color: #fff; padding: .65rem 1.2rem; border-radius: 8px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+
+/* ---------- Pied de page ---------- */
+.pied { background: var(--vert-profond); color: #CFE6DD; padding: 1.6rem 1.5rem; margin-top: 2rem; }
+.pied .contenu { max-width: 1080px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: .5rem 2rem; justify-content: space-between; align-items: center; }
+.pied strong { color: #fff; font-weight: 800; }
+.pied a, .pied a:link, .pied a:visited { color: #fff; font-weight: 600; }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 820px) {
+  .hero { grid-template-columns: 1fr; padding: 2rem 1.4rem 3.8rem; }
+  .hero-demo { display: none; }
+  .recherche { margin: -2rem .6rem 0; }
+  .ressource { grid-template-columns: 56px 1fr; padding: 1rem; }
+  .ressource .tuile { width: 56px; height: 56px; }
+  .ressource .prix { grid-column: 2; text-align: left; }
+  .ressource .actions { grid-column: 1 / -1; justify-content: flex-start; }
+  .etapes { grid-template-columns: 1fr; }
+}
+
+/* Un seul mouvement : le créneau choisi de l'exemple apparaît au chargement */
+@media (prefers-reduced-motion: no-preference) {
+  .slot.choisi { animation: choix .7s cubic-bezier(.2, .9, .3, 1.3) .5s both; }
+  @keyframes choix { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+}
